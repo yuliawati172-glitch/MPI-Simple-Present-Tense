@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPI Simple Present Tense - SMPN 2 Palas</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Nunito & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons via CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        skybrand: '#0284c7',
+                        skylight: '#e0f2fe',
+                        sunbrand: '#f59e0b',
+                        sunlight: '#fef3c7',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Smooth Transitions & Animations */
+        body {
+            background-color: #f0f9ff;
+            background-image: radial-gradient(#bae6fd 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.35s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-hover {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px -5px rgba(2, 132, 199, 0.2);
+        }
+
+        /* Print Styles khusus untuk mencetak/simpan PDF LKPD */
+        @media print {
+            body {
+                background: white !important;
+                background-image: none !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            #section-lkpd {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            input, select, textarea {
+                border: 1px solid #94a3b8 !important;
+                background: transparent !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Custom Toast / Message Box (Pengganti alert()) -->
+    <div id="toast-box" class="fixed bottom-5 right-5 z-50 hidden transform transition-all duration-300 translate-y-10 opacity-0 no-print">
+        <div id="toast-content" class="flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl font-semibold text-white bg-slate-800">
+            <i id="toast-icon" class="fas fa-info-circle text-xl"></i>
+            <span id="toast-message">Pesan notifikasi</span>
+        </div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-sky-100 no-print">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- Logo / Judul -->
+            <button onclick="navigateTo('home')" class="flex items-center gap-3 text-left group focus:outline-none">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition">
+                    <i class="fas fa-book-open text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading font-bold text-lg sm:text-xl text-sky-900 leading-tight">Simple Present Tense</h1>
+                    <p class="text-xs text-slate-500 font-semibold">Bahasa Inggris • SMPN 2 Palas</p>
+                </div>
+            </button>
+
+            <!-- Navigation Pills -->
+            <nav class="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 w-full sm:w-auto justify-start sm:justify-end">
+                <button onclick="navigateTo('home')" data-nav="home" class="nav-btn px-3 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 whitespace-nowrap bg-sky-600 text-white">
+                    <i class="fas fa-home"></i> <span class="hidden md:inline">Beranda</span>
+                </button>
+                <button onclick="navigateTo('materi')" data-nav="materi" class="nav-btn px-3 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-sky-50 transition flex items-center gap-1.5 whitespace-nowrap">
+                    <i class="fas fa-book"></i> <span>Materi</span>
+                </button>
+                <button onclick="navigateTo('simulasi')" data-nav="simulasi" class="nav-btn px-3 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-sky-50 transition flex items-center gap-1.5 whitespace-nowrap">
+                    <i class="fas fa-cogs"></i> <span>Simulasi</span>
+                </button>
+                <button onclick="navigateTo('game')" data-nav="game" class="nav-btn px-3 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-sky-50 transition flex items-center gap-1.5 whitespace-nowrap">
+                    <i class="fas fa-gamepad"></i> <span>Game</span>
+                </button>
+                <button onclick="navigateTo('lkpd')" data-nav="lkpd" class="nav-btn px-3 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-sky-50 transition flex items-center gap-1.5 whitespace-nowrap">
+                    <i class="fas fa-file-alt"></i> <span>LKPD</span>
+                </button>
+                <button onclick="navigateTo('evaluasi')" data-nav="evaluasi" class="nav-btn px-3 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-sky-50 transition flex items-center gap-1.5 whitespace-nowrap">
+                    <i class="fas fa-trophy"></i> <span>Evaluasi</span>
+                </button>
+                <button onclick="navigateTo('pengembang')" data-nav="pengembang" class="nav-btn px-3 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-sky-50 transition flex items-center gap-1.5 whitespace-nowrap">
+                    <i class="fas fa-user-tie"></i> <span class="hidden lg:inline">Pengembang</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-6 sm:py-8">
+
+        <!-- ==========================================
+             0. BERANDA (HOME / DASHBOARD)
+             ========================================== -->
+        <section id="section-home" class="page-section fade-in">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 rounded-3xl p-6 sm:p-10 text-white shadow-xl mb-8 relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="inline-block bg-amber-400 text-slate-900 font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3 shadow-sm">
+                        Media Pembelajaran Interaktif
+                    </span>
+                    <h2 class="font-heading text-2xl sm:text-4xl font-extrabold mb-3 leading-tight">
+                        Let's Master <span class="text-amber-300">Simple Present Tense!</span> 🚀
+                    </h2>
+                    <p class="text-sky-100 text-sm sm:text-base mb-6 leading-relaxed">
+                        Selamat datang siswa-siswi hebat <strong>SMPN 2 Palas</strong>! Pelajari cara menceritakan kebiasaan sehari-hari dan fakta umum dalam Bahasa Inggris dengan cara yang seru dan interaktif.
+                    </p>
+                    <button onclick="navigateTo('materi')" class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold px-6 py-3 rounded-2xl shadow-lg transition transform hover:scale-105 inline-flex items-center gap-2">
+                        <span>Mulai Belajar Sekarang</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <!-- Dekorasi Latar -->
+                <i class="fas fa-clock text-white/10 text-9xl absolute -right-4 -bottom-6 transform rotate-12"></i>
+                <i class="fas fa-sun text-amber-300/20 text-7xl absolute right-24 top-4"></i>
+            </div>
+
+            <!-- Grid 6 Menu Utama -->
+            <div class="mb-4 flex items-center justify-between">
+                <h3 class="font-heading font-bold text-lg text-slate-700">Pilih Menu Pembelajaran:</h3>
+                <span class="text-xs font-semibold text-slate-400">Klik kartu untuk membuka</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Card 1: Materi -->
+                <div onclick="navigateTo('materi')" class="bg-white rounded-3xl p-6 shadow-md border border-sky-100 cursor-pointer card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl mb-4">
+                            <i class="fas fa-book-reader"></i>
+                        </div>
+                        <h4 class="font-heading font-bold text-xl text-slate-800 mb-1">1. Materi Belajar</h4>
+                        <p class="text-sm text-slate-500">Pahami fungsi, rumus (+, -, ?), aturan akhiran -s/-es, dan keterangan waktu.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-sky-600 font-bold text-sm">
+                        <span>Buka Materi</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Card 2: Simulasi -->
+                <div onclick="navigateTo('simulasi')" class="bg-white rounded-3xl p-6 shadow-md border border-amber-100 cursor-pointer card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mb-4">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <h4 class="font-heading font-bold text-xl text-slate-800 mb-1">2. Simulasi Kalimat</h4>
+                        <p class="text-sm text-slate-500">Rakit kalimat sendiri di <em>Sentence Builder Lab</em> dan lihat perubahan otomatisnya.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-amber-600 font-bold text-sm">
+                        <span>Coba Simulasi</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Card 3: Game -->
+                <div onclick="navigateTo('game')" class="bg-white rounded-3xl p-6 shadow-md border border-emerald-100 cursor-pointer card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mb-4">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h4 class="font-heading font-bold text-xl text-slate-800 mb-1">3. Game Edukasi</h4>
+                        <p class="text-sm text-slate-500">Uji ketangkasanmu dalam <em>Present Tense Challenge</em> dengan sistem skor & nyawa!</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-emerald-600 font-bold text-sm">
+                        <span>Mainkan Game</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Card 4: LKPD -->
+                <div onclick="navigateTo('lkpd')" class="bg-white rounded-3xl p-6 shadow-md border border-purple-100 cursor-pointer card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl mb-4">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h4 class="font-heading font-bold text-xl text-slate-800 mb-1">4. LKPD Digital</h4>
+                        <p class="text-sm text-slate-500">Kerjakan lembar aktivitas siswa interaktif dan simpan/cetak hasilnya dalam PDF.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-purple-600 font-bold text-sm">
+                        <span>Kerjakan LKPD</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Card 5: Evaluasi -->
+                <div onclick="navigateTo('evaluasi')" class="bg-white rounded-3xl p-6 shadow-md border border-rose-100 cursor-pointer card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-2xl mb-4">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <h4 class="font-heading font-bold text-xl text-slate-800 mb-1">5. Evaluasi Akhir</h4>
+                        <p class="text-sm text-slate-500">Kerjakan 10 soal pilihan ganda untuk mengukur pemahamanmu lengkap dengan nilai.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-rose-600 font-bold text-sm">
+                        <span>Mulai Kuis</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Card 6: Pengembang -->
+                <div onclick="navigateTo('pengembang')" class="bg-white rounded-3xl p-6 shadow-md border border-indigo-100 cursor-pointer card-hover flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl mb-4">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <h4 class="font-heading font-bold text-xl text-slate-800 mb-1">6. Pengembang</h4>
+                        <p class="text-sm text-slate-500">Profil guru penyusun media pembelajaran dari SMPN 2 Palas.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-indigo-600 font-bold text-sm">
+                        <span>Lihat Profil</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             1. MENU MATERI (MICRO-LEARNING SLIDES)
+             ========================================== -->
+        <section id="section-materi" class="page-section hidden fade-in">
+            <div class="bg-white rounded-3xl shadow-lg border border-sky-100 overflow-hidden">
+                <!-- Header Materi -->
+                <div class="bg-sky-600 text-white p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider bg-sky-800/50 px-3 py-1 rounded-full">Modul Pembelajaran</span>
+                        <h2 class="font-heading text-2xl font-bold mt-1">Simple Present Tense</h2>
+                    </div>
+                    <!-- Tab Indicators -->
+                    <div class="flex gap-2">
+                        <button onclick="setMateriSlide(0)" class="materi-tab px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-900 transition">1. Fungsi</button>
+                        <button onclick="setMateriSlide(1)" class="materi-tab px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-700 text-white hover:bg-sky-500 transition">2. Rumus</button>
+                        <button onclick="setMateriSlide(2)" class="materi-tab px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-700 text-white hover:bg-sky-500 transition">3. Akhiran -s/-es</button>
+                        <button onclick="setMateriSlide(3)" class="materi-tab px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-700 text-white hover:bg-sky-500 transition">4. Time Signal</button>
+                    </div>
+                </div>
+
+                <!-- Konten Slide Materi -->
+                <div class="p-6 sm:p-8 min-h-[360px] flex flex-col justify-between">
+                    
+                    <!-- Slide 0: Fungsi -->
+                    <div id="materi-slide-0" class="materi-slide fade-in">
+                        <h3 class="font-heading text-xl font-bold text-sky-900 mb-3 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-extrabold">1</span>
+                            Kapan kita menggunakan Simple Present Tense?
+                        </h3>
+                        <p class="text-slate-600 mb-6"><em>Simple Present Tense</em> adalah bentuk waktu dalam Bahasa Inggris yang digunakan untuk menyatakan kejadian yang berlangsung saat ini secara berulang atau merupakan kebenaran umum.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="bg-sky-50 border border-sky-200 rounded-2xl p-5">
+                                <div class="text-3xl mb-2">⏰</div>
+                                <h4 class="font-bold text-lg text-sky-900 mb-1">1. Kebiasaan / Rutinitas (Habitual Actions)</h4>
+                                <p class="text-sm text-slate-600 mb-3">Kegiatan yang dilakukan secara rutin atau berulang-ulang setiap hari, setiap minggu, dll.</p>
+                                <div class="bg-white p-3 rounded-xl border border-sky-100 text-sm">
+                                    <p class="font-bold text-sky-700">• I wake up at 5 o'clock every morning.</p>
+                                    <p class="text-slate-500 text-xs mb-2">(Saya bangun jam 5 setiap pagi.)</p>
+                                    <p class="font-bold text-sky-700">• She goes to SMPN 2 Palas by bicycle.</p>
+                                    <p class="text-slate-500 text-xs">(Dia pergi ke SMPN 2 Palas naik sepeda.)</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                                <div class="text-3xl mb-2">🌍</div>
+                                <h4 class="font-bold text-lg text-amber-900 mb-1">2. Fakta / Kebenaran Umum (General Truths)</h4>
+                                <p class="text-sm text-slate-600 mb-3">Hal-hal yang sudah pasti benar secara ilmiah maupun kenyataan umum.</p>
+                                <div class="bg-white p-3 rounded-xl border border-amber-100 text-sm">
+                                    <p class="font-bold text-amber-700">• The sun rises in the east.</p>
+                                    <p class="text-slate-500 text-xs mb-2">(Matahari terbit di sebelah timur.)</p>
+                                    <p class="font-bold text-amber-700">• Water boils at 100 degrees Celsius.</p>
+                                    <p class="text-slate-500 text-xs">(Air mendidih pada suhu 100 derajat Celcius.)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 1: Rumus Kalimat -->
+                    <div id="materi-slide-1" class="materi-slide hidden fade-in">
+                        <h3 class="font-heading text-xl font-bold text-sky-900 mb-3 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-extrabold">2</span>
+                            Rumus Kalimat Verbal (Menggunakan Kata Kerja)
+                        </h3>
+                        <p class="text-slate-600 mb-5">Perhatikan perbedaan penggunaan kata kerja bantu (<strong>Do / Does</strong>) dan imbuhan kata kerja berdasarkan <strong>Subjek</strong> kalimat:</p>
+
+                        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-700 font-bold">
+                                        <th class="p-3.5 border-b">Bentuk</th>
+                                        <th class="p-3.5 border-b text-blue-700">Subjek: I, You, We, They</th>
+                                        <th class="p-3.5 border-b text-rose-700">Subjek: He, She, It (Tunggal)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                    <tr>
+                                        <td class="p-3.5 font-extrabold text-emerald-600 bg-emerald-50/50">(+) Positif</td>
+                                        <td class="p-3.5">
+                                            <span class="font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">S + Verb 1</span><br>
+                                            <span class="text-slate-600 mt-1 inline-block">Contoh: They <strong>play</strong> football.</span>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <span class="font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded">S + Verb 1 + (-s / -es)</span><br>
+                                            <span class="text-slate-600 mt-1 inline-block">Contoh: He <strong>play<span class="text-rose-600 font-extrabold">s</span></strong> football.</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3.5 font-extrabold text-rose-600 bg-rose-50/50">(-) Negatif</td>
+                                        <td class="p-3.5">
+                                            <span class="font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">S + do not (don't) + Verb 1</span><br>
+                                            <span class="text-slate-600 mt-1 inline-block">Contoh: They <strong>don't play</strong> football.</span>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <span class="font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded">S + does not (doesn't) + Verb 1</span><br>
+                                            <span class="text-slate-600 mt-1 inline-block">Contoh: He <strong>doesn't play</strong> football. <em class="text-xs text-slate-400">(tanpa -s!)</em></span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3.5 font-extrabold text-amber-600 bg-amber-50/50">(?) Tanya</td>
+                                        <td class="p-3.5">
+                                            <span class="font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Do + S + Verb 1 + ?</span><br>
+                                            <span class="text-slate-600 mt-1 inline-block">Contoh: <strong>Do</strong> they <strong>play</strong> football?</span>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <span class="font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded">Does + S + Verb 1 + ?</span><br>
+                                            <span class="text-slate-600 mt-1 inline-block">Contoh: <strong>Does</strong> he <strong>play</strong> football? <em class="text-xs text-slate-400">(tanpa -s!)</em></span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Aturan -s/-es -->
+                    <div id="materi-slide-2" class="materi-slide hidden fade-in">
+                        <h3 class="font-heading text-xl font-bold text-sky-900 mb-3 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-extrabold">3</span>
+                            Aturan Penambahan -s / -es (Khusus Subjek He, She, It)
+                        </h3>
+                        <p class="text-slate-600 mb-4">Pada kalimat <strong>Positif (+)</strong> dengan subjek tunggal (<em>He, She, It, Budi, My mother</em>), kata kerja dasar mengalami perubahan:</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                                <span class="bg-sky-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">Aturan 1: Umum</span>
+                                <h4 class="font-bold text-slate-800 mt-2 mb-1">Tambahkan <span class="text-rose-600 font-extrabold">-s</span></h4>
+                                <p class="text-xs text-slate-500 mb-3">Berlaku untuk sebagian besar kata kerja biasa.</p>
+                                <ul class="text-sm space-y-1 font-semibold">
+                                    <li>• eat ➔ eat<span class="text-rose-600 font-extrabold">s</span></li>
+                                    <li>• drink ➔ drink<span class="text-rose-600 font-extrabold">s</span></li>
+                                    <li>• read ➔ read<span class="text-rose-600 font-extrabold">s</span></li>
+                                    <li>• play ➔ play<span class="text-rose-600 font-extrabold">s</span></li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                                <span class="bg-amber-500 text-white text-xs font-bold px-2.5 py-1 rounded-lg">Aturan 2: Akhiran -o, -ch, -sh, -ss, -x</span>
+                                <h4 class="font-bold text-slate-800 mt-2 mb-1">Tambahkan <span class="text-rose-600 font-extrabold">-es</span></h4>
+                                <p class="text-xs text-slate-500 mb-3">Jika kata kerja berakhiran huruf desis atau -o.</p>
+                                <ul class="text-sm space-y-1 font-semibold">
+                                    <li>• go ➔ go<span class="text-rose-600 font-extrabold">es</span></li>
+                                    <li>• watch ➔ watch<span class="text-rose-600 font-extrabold">es</span></li>
+                                    <li>• wash ➔ wash<span class="text-rose-600 font-extrabold">es</span></li>
+                                    <li>• fix ➔ fix<span class="text-rose-600 font-extrabold">es</span></li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+                                <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">Aturan 3: Konsonan + y</span>
+                                <h4 class="font-bold text-slate-800 mt-2 mb-1">Ubah <span class="text-slate-400">y</span> jadi <span class="text-rose-600 font-extrabold">-ies</span></h4>
+                                <p class="text-xs text-slate-500 mb-3">Jika huruf sebelum <strong>y</strong> adalah huruf mati (konsonan).</p>
+                                <ul class="text-sm space-y-1 font-semibold">
+                                    <li>• study ➔ stud<span class="text-rose-600 font-extrabold">ies</span></li>
+                                    <li>• cry ➔ cr<span class="text-rose-600 font-extrabold">ies</span></li>
+                                    <li>• fly ➔ fl<span class="text-rose-600 font-extrabold">ies</span></li>
+                                    <li>• try ➔ tr<span class="text-rose-600 font-extrabold">ies</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: Time Signals -->
+                    <div id="materi-slide-3" class="materi-slide hidden fade-in">
+                        <h3 class="font-heading text-xl font-bold text-sky-900 mb-3 flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-extrabold">4</span>
+                            Time Signals (Keterangan Waktu)
+                        </h3>
+                        <p class="text-slate-600 mb-5">Kata-kata berikut sering muncul sebagai penanda bahwa kalimat tersebut menggunakan <em>Simple Present Tense</em>:</p>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
+                            <div class="bg-sky-50 border border-sky-200 p-3.5 rounded-2xl text-center">
+                                <span class="block font-extrabold text-sky-700 text-lg">Always</span>
+                                <span class="text-xs text-slate-500 font-semibold">Selalu (100%)</span>
+                            </div>
+                            <div class="bg-sky-50 border border-sky-200 p-3.5 rounded-2xl text-center">
+                                <span class="block font-extrabold text-sky-700 text-lg">Usually</span>
+                                <span class="text-xs text-slate-500 font-semibold">Biasanya (80%)</span>
+                            </div>
+                            <div class="bg-sky-50 border border-sky-200 p-3.5 rounded-2xl text-center">
+                                <span class="block font-extrabold text-sky-700 text-lg">Often</span>
+                                <span class="text-xs text-slate-500 font-semibold">Sering (60%)</span>
+                            </div>
+                            <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl text-center">
+                                <span class="block font-extrabold text-amber-700 text-lg">Sometimes</span>
+                                <span class="text-xs text-slate-500 font-semibold">Kadang-kadang (40%)</span>
+                            </div>
+                            <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl text-center">
+                                <span class="block font-extrabold text-amber-700 text-lg">Never</span>
+                                <span class="text-xs text-slate-500 font-semibold">Tidak Pernah (0%)</span>
+                            </div>
+                            <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl text-center">
+                                <span class="block font-extrabold text-emerald-700 text-lg">Every day / morning</span>
+                                <span class="text-xs text-slate-500 font-semibold">Setiap hari / pagi</span>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-xl text-sm text-indigo-900">
+                            <strong>Tips:</strong> Kata seperti <em>always, usually, often, sometimes, never</em> diletakkan <strong>sebelum kata kerja utama</strong>. Contoh: <em>"I <strong>always</strong> study English."</em>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons Bottom -->
+                    <div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <button id="btn-prev-materi" onclick="changeMateriSlide(-1)" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2">
+                            <i class="fas fa-arrow-left"></i> Sebelumnya
+                        </button>
+                        <span id="materi-counter" class="text-xs font-extrabold text-slate-400">Halaman 1 dari 4</span>
+                        <button id="btn-next-materi" onclick="changeMateriSlide(1)" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-sky-600 text-white hover:bg-sky-700 transition flex items-center gap-2">
+                            Selanjutnya <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             2. MENU SIMULASI (SENTENCE BUILDER LAB)
+             ========================================== -->
+        <section id="section-simulasi" class="page-section hidden fade-in">
+            <div class="bg-white rounded-3xl shadow-lg border border-amber-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-6">
+                    <span class="text-xs font-bold uppercase tracking-wider bg-black/20 px-3 py-1 rounded-full">Laboratorium Tata Bahasa</span>
+                    <h2 class="font-heading text-2xl font-bold mt-1 flex items-center gap-2">
+                        <i class="fas fa-flask"></i> Sentence Builder Lab
+                    </h2>
+                    <p class="text-amber-50 text-sm mt-1">Pilih komponen di bawah ini untuk melihat bagaimana mesin merakit kalimat Simple Present Tense yang benar!</p>
+                </div>
+
+                <div class="p-6 sm:p-8">
+                    <!-- Panel Kontrol Pilihan -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+                        <!-- Pilihan 1: Jenis Kalimat -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <label class="block text-xs font-extrabold uppercase text-slate-500 mb-2">1. Pilih Jenis Kalimat</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setSimType('positive')" id="sim-type-positive" class="sim-type-btn py-2.5 px-2 rounded-xl font-bold text-sm bg-emerald-600 text-white shadow-sm transition">
+                                    (+) Positif
+                                </button>
+                                <button onclick="setSimType('negative')" id="sim-type-negative" class="sim-type-btn py-2.5 px-2 rounded-xl font-bold text-sm bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition">
+                                    (-) Negatif
+                                </button>
+                                <button onclick="setSimType('question')" id="sim-type-question" class="sim-type-btn py-2.5 px-2 rounded-xl font-bold text-sm bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition">
+                                    (?) Tanya
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Pilihan 2: Subjek -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <label for="sim-subject" class="block text-xs font-extrabold uppercase text-slate-500 mb-2">2. Pilih Subjek (Pelaku)</label>
+                            <select id="sim-subject" onchange="updateSimulation()" class="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-bold text-slate-800 focus:ring-2 focus:ring-amber-400 focus:outline-none">
+                                <option value="I">I (Saya)</option>
+                                <option value="You">You (Kamu)</option>
+                                <option value="We">We (Kami/Kita)</option>
+                                <option value="They">They (Mereka)</option>
+                                <option value="He" selected>He (Dia laki-laki)</option>
+                                <option value="She">She (Dia perempuan)</option>
+                                <option value="It">It (Benda/Hewan)</option>
+                            </select>
+                        </div>
+
+                        <!-- Pilihan 3: Kata Kerja -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                            <label for="sim-verb" class="block text-xs font-extrabold uppercase text-slate-500 mb-2">3. Pilih Kata Kerja (Verb 1)</label>
+                            <select id="sim-verb" onchange="updateSimulation()" class="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-bold text-slate-800 focus:ring-2 focus:ring-amber-400 focus:outline-none">
+                                <option value="eat">eat (makan) + fried rice</option>
+                                <option value="drink">drink (minum) + milk</option>
+                                <option value="go" selected>go (pergi) + to school</option>
+                                <option value="study">study (belajar) + English</option>
+                                <option value="play">play (bermain) + football</option>
+                                <option value="watch">watch (menonton) + TV</option>
+                                <option value="read">read (membaca) + a book</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Layar Hasil Simulasi -->
+                    <div class="bg-gradient-to-br from-sky-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-center text-white shadow-inner relative overflow-hidden">
+                        <span class="text-xs font-bold uppercase tracking-widest text-sky-300 block mb-2">Hasil Rakitan Kalimat:</span>
+                        <div id="sim-result-sentence" class="font-heading text-2xl sm:text-4xl font-extrabold text-amber-300 my-3 tracking-wide">
+                            He <span class="text-rose-400 underline decoration-wavy">goes</span> to school every day.
+                        </div>
+                        <p id="sim-result-meaning" class="text-sky-200 text-sm italic mb-6">
+                            Artinya: "Dia (laki-laki) pergi ke sekolah setiap hari."
+                        </p>
+
+                        <!-- Kotak Analisis Penjelasan -->
+                        <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 text-left max-w-2xl mx-auto flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-900 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-amber-300 text-sm mb-1">Mengapa bentuknya seperti ini?</h4>
+                                <p id="sim-explanation" class="text-xs sm:text-sm text-slate-200 leading-relaxed">
+                                    Karena ini kalimat <strong>Positif (+)</strong> dan subjeknya adalah <strong>He</strong> (orang ketiga tunggal), kata kerja dasar <em>"go"</em> mendapat akhiran <strong>-es</strong> menjadi <strong>"goes"</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             3. MENU GAME (PRESENT TENSE CHALLENGE)
+             ========================================== -->
+        <section id="section-game" class="page-section hidden fade-in">
+            <div class="bg-white rounded-3xl shadow-lg border border-emerald-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider bg-black/20 px-3 py-1 rounded-full">Mini Game Edukasi</span>
+                        <h2 class="font-heading text-2xl font-bold mt-1">Present Tense Challenge 🎮</h2>
+                    </div>
+                    <!-- HUD Skor & Nyawa -->
+                    <div id="game-hud" class="hidden flex items-center gap-4 bg-white/15 px-4 py-2 rounded-2xl backdrop-blur-sm">
+                        <div class="text-center">
+                            <span class="block text-[10px] uppercase font-bold text-emerald-100">Skor</span>
+                            <span id="game-score" class="font-heading font-extrabold text-xl text-amber-300">0</span>
+                        </div>
+                        <div class="h-8 w-px bg-white/20"></div>
+                        <div class="text-center">
+                            <span class="block text-[10px] uppercase font-bold text-emerald-100">Nyawa</span>
+                            <div id="game-lives" class="text-rose-400 text-lg tracking-widest">
+                                ❤️❤️❤️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 sm:p-8">
+                    <!-- Layar Start Game -->
+                    <div id="game-start-screen" class="text-center py-8 max-w-lg mx-auto">
+                        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-4 shadow-sm">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3 class="font-heading text-2xl font-extrabold text-slate-800 mb-2">Siap Menerima Tantangan?</h3>
+                        <p class="text-slate-600 text-sm mb-6">
+                            Lengkapi 8 kalimat rumpang dengan memilih kata yang tepat. Kamu memiliki <strong>3 nyawa (❤️)</strong>. Setiap jawaban benar bernilai <strong>+10 poin</strong>!
+                        </p>
+                        <button onclick="startGame()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-8 py-3.5 rounded-2xl shadow-lg transition transform hover:scale-105 inline-flex items-center gap-2">
+                            <i class="fas fa-play"></i> Mulai Bermain
+                        </button>
+                    </div>
+
+                    <!-- Layar Bermain -->
+                    <div id="game-play-screen" class="hidden max-w-2xl mx-auto">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-400 mb-2">
+                            <span id="game-q-number">Pertanyaan 1 dari 8</span>
+                            <span>Pilih jawaban yang paling tepat!</span>
+                        </div>
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full mb-6 overflow-hidden">
+                            <div id="game-progress" class="bg-emerald-500 h-full transition-all duration-300" style="width: 12.5%"></div>
+                        </div>
+
+                        <!-- Kartu Soal -->
+                        <div class="bg-slate-50 border-2 border-slate-200 rounded-3xl p-6 sm:p-8 text-center mb-6">
+                            <p id="game-question-text" class="font-heading text-xl sm:text-2xl font-bold text-slate-800 leading-relaxed">
+                                My mother ______ fried rice every morning.
+                            </p>
+                        </div>
+
+                        <!-- 2 Tombol Opsi -->
+                        <div id="game-options" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <button onclick="checkGameAnswer(0)" id="game-opt-0" class="py-4 px-6 rounded-2xl font-heading font-extrabold text-lg bg-white border-2 border-sky-200 text-sky-800 hover:bg-sky-50 hover:border-sky-400 shadow-sm transition">
+                                cook
+                            </button>
+                            <button onclick="checkGameAnswer(1)" id="game-opt-1" class="py-4 px-6 rounded-2xl font-heading font-extrabold text-lg bg-white border-2 border-sky-200 text-sky-800 hover:bg-sky-50 hover:border-sky-400 shadow-sm transition">
+                                cooks
+                            </button>
+                        </div>
+
+                        <!-- Kotak Feedback Setelah Menjawab -->
+                        <div id="game-feedback" class="hidden rounded-2xl p-4 mb-4 flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <span id="game-fb-icon" class="text-2xl">✅</span>
+                                <div>
+                                    <h4 id="game-fb-title" class="font-bold text-sm">Benar! +10 Poin</h4>
+                                    <p id="game-fb-desc" class="text-xs opacity-90">Penjelasan singkat.</p>
+                                </div>
+                            </div>
+                            <button onclick="nextGameQuestion()" class="px-5 py-2 rounded-xl font-bold text-sm bg-slate-800 text-white hover:bg-slate-700 whitespace-nowrap">
+                                Lanjut <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Layar Game Over / Win -->
+                    <div id="game-end-screen" class="hidden text-center py-8 max-w-md mx-auto">
+                        <div id="game-end-emoji" class="text-6xl mb-3">🏆</div>
+                        <h3 id="game-end-title" class="font-heading text-3xl font-extrabold text-slate-800 mb-1">You Win!</h3>
+                        <p id="game-end-subtitle" class="text-slate-500 text-sm mb-6">Luar biasa! Kamu berhasil menyelesaikan tantangan.</p>
+                        
+                        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+                            <span class="text-xs font-bold uppercase text-amber-700">Skor Akhir Kamu</span>
+                            <div id="game-final-score" class="font-heading text-4xl font-extrabold text-amber-600 mt-1">80</div>
+                        </div>
+
+                        <button onclick="startGame()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-8 py-3 rounded-2xl shadow-md transition inline-flex items-center gap-2">
+                            <i class="fas fa-redo"></i> Main Lagi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             4. MENU LKPD (INTERACTIVE WORKSHEET)
+             ========================================== -->
+        <section id="section-lkpd" class="page-section hidden fade-in">
+            <div class="bg-white rounded-3xl shadow-lg border border-purple-100 overflow-hidden">
+                <!-- Header LKPD -->
+                <div class="bg-purple-700 text-white p-6 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider bg-purple-900/50 px-3 py-1 rounded-full">Lembar Kerja Peserta Didik</span>
+                        <h2 class="font-heading text-2xl font-bold mt-1">LKPD: Daily Routines</h2>
+                        <p class="text-purple-200 text-xs mt-0.5">SMPN 2 Palas • Mapel: Bahasa Inggris</p>
+                    </div>
+                    <button onclick="printLKPD()" class="no-print bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold px-4 py-2.5 rounded-xl shadow-md text-sm flex items-center gap-2 transition">
+                        <i class="fas fa-print"></i> Cetak / Simpan PDF
+                    </button>
+                </div>
+
+                <div class="p-6 sm:p-8 space-y-8">
+                    <!-- Identitas Siswa -->
+                    <div class="bg-purple-50/70 border border-purple-200 rounded-2xl p-5">
+                        <h3 class="font-bold text-purple-900 text-sm uppercase tracking-wider mb-3">Identitas Siswa</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap:</label>
+                                <input type="text" id="lkpd-name" placeholder="Ketik nama lengkapmu..." class="w-full px-3.5 py-2 rounded-xl border border-purple-200 bg-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Kelas:</label>
+                                <input type="text" id="lkpd-class" placeholder="Contoh: VII A / VIII B" class="w-full px-3.5 py-2 rounded-xl border border-purple-200 bg-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aktivitas 1: Matching -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-heading font-bold text-lg text-slate-800">
+                                <span class="bg-purple-600 text-white text-xs px-2.5 py-1 rounded-lg mr-2">Activity 1</span>
+                                Match the Activities (Mencocokkan Kalimat)
+                            </h3>
+                            <span id="lkpd-score-1" class="text-xs font-extrabold text-purple-700"></span>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4">Pilih arti atau situasi aktivitas harian yang sesuai dengan kalimat Bahasa Inggris di sebelah kiri.</p>
+
+                        <div class="space-y-3">
+                            <!-- Item 1 -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                                <span class="font-bold text-slate-700 text-sm">1. Rina brushes her teeth twice a day.</span>
+                                <select id="lkpd-m1" class="p-2 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-700 sm:w-64">
+                                    <option value="">-- Pilih Arti Aktivitas --</option>
+                                    <option value="a">Menyapu lantai ruang kelas</option>
+                                    <option value="b">Menggosok gigi dua kali sehari</option>
+                                    <option value="c">Sarapan pagi sebelum sekolah</option>
+                                    <option value="d">Mengerjakan PR di malam hari</option>
+                                </select>
+                            </div>
+                            <!-- Item 2 -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                                <span class="font-bold text-slate-700 text-sm">2. We have breakfast before going to school.</span>
+                                <select id="lkpd-m2" class="p-2 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-700 sm:w-64">
+                                    <option value="">-- Pilih Arti Aktivitas --</option>
+                                    <option value="a">Menyapu lantai ruang kelas</option>
+                                    <option value="b">Menggosok gigi dua kali sehari</option>
+                                    <option value="c">Sarapan pagi sebelum sekolah</option>
+                                    <option value="d">Mengerjakan PR di malam hari</option>
+                                </select>
+                            </div>
+                            <!-- Item 3 -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                                <span class="font-bold text-slate-700 text-sm">3. Dimas does his homework in the evening.</span>
+                                <select id="lkpd-m3" class="p-2 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-700 sm:w-64">
+                                    <option value="">-- Pilih Arti Aktivitas --</option>
+                                    <option value="a">Menyapu lantai ruang kelas</option>
+                                    <option value="b">Menggosok gigi dua kali sehari</option>
+                                    <option value="c">Sarapan pagi sebelum sekolah</option>
+                                    <option value="d">Mengerjakan PR di malam hari</option>
+                                </select>
+                            </div>
+                            <!-- Item 4 -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                                <span class="font-bold text-slate-700 text-sm">4. The students sweep the classroom floor.</span>
+                                <select id="lkpd-m4" class="p-2 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-700 sm:w-64">
+                                    <option value="">-- Pilih Arti Aktivitas --</option>
+                                    <option value="a">Menyapu lantai ruang kelas</option>
+                                    <option value="b">Menggosok gigi dua kali sehari</option>
+                                    <option value="c">Sarapan pagi sebelum sekolah</option>
+                                    <option value="d">Mengerjakan PR di malam hari</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aktivitas 2: Reading Comprehension -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-heading font-bold text-lg text-slate-800">
+                                <span class="bg-purple-600 text-white text-xs px-2.5 py-1 rounded-lg mr-2">Activity 2</span>
+                                Reading Comprehension (True / False)
+                            </h3>
+                            <span id="lkpd-score-2" class="text-xs font-extrabold text-purple-700"></span>
+                        </div>
+                        
+                        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-4 text-sm text-slate-700 leading-relaxed">
+                            <h4 class="font-bold text-amber-900 mb-1">📖 Read the text carefully:</h4>
+                            <p>
+                                "Hello! My name is Bagas. I am a student at SMPN 2 Palas. Every morning, I wake up at 05.00 AM. After taking a bath and praying, I have breakfast with my family. I go to school at 06.30 AM by motorcycle with my father. At school, I study many subjects and play basketball with my friends during break time. I never come late to school."
+                            </p>
+                        </div>
+
+                        <div class="space-y-3 text-sm">
+                            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <span>1. Bagas wakes up at six o'clock every morning.</span>
+                                <div class="flex gap-4 font-bold">
+                                    <label class="cursor-pointer flex items-center gap-1.5"><input type="radio" name="lkpd-tf1" value="true"> True</label>
+                                    <label class="cursor-pointer flex items-center gap-1.5"><input type="radio" name="lkpd-tf1" value="false"> False</label>
+                                </div>
+                            </div>
+                            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <span>2. Bagas goes to school with his father by motorcycle.</span>
+                                <div class="flex gap-4 font-bold">
+                                    <label class="cursor-pointer flex items-center gap-1.5"><input type="radio" name="lkpd-tf2" value="true"> True</label>
+                                    <label class="cursor-pointer flex items-center gap-1.5"><input type="radio" name="lkpd-tf2" value="false"> False</label>
+                                </div>
+                            </div>
+                            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <span>3. Bagas always comes late to school.</span>
+                                <div class="flex gap-4 font-bold">
+                                    <label class="cursor-pointer flex items-center gap-1.5"><input type="radio" name="lkpd-tf3" value="true"> True</label>
+                                    <label class="cursor-pointer flex items-center gap-1.5"><input type="radio" name="lkpd-tf3" value="false"> False</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aktivitas 3: Writing -->
+                    <div>
+                        <h3 class="font-heading font-bold text-lg text-slate-800 mb-2">
+                            <span class="bg-purple-600 text-white text-xs px-2.5 py-1 rounded-lg mr-2">Activity 3</span>
+                            Write Your Morning Routine (Menulis Kalimat)
+                        </h3>
+                        <p class="text-sm text-slate-500 mb-3">Tuliskan 2 kalimat sederhana menggunakan <em>Simple Present Tense</em> tentang kebiasaanmu di pagi hari!</p>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">Kalimat 1 (Contoh: I wake up at 05.00 AM every day.)</label>
+                                <input type="text" id="lkpd-w1" placeholder="Tulis kalimat Bahasa Inggrismu di sini..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">Kalimat 2 (Contoh: I help my mother in the kitchen.)</label>
+                                <input type="text" id="lkpd-w2" placeholder="Tulis kalimat Bahasa Inggrismu di sini..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hasil Pemeriksaan & Tombol Aksi -->
+                    <div id="lkpd-result-banner" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-emerald-900 text-sm font-semibold"></div>
+
+                    <div class="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 no-print">
+                        <button onclick="checkLKPD()" class="bg-purple-600 hover:bg-purple-700 text-white font-extrabold px-6 py-3 rounded-2xl shadow-md transition flex items-center gap-2">
+                            <i class="fas fa-check-circle"></i> Periksa Aktivitas 1 & 2
+                        </button>
+                        <button onclick="printLKPD()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-6 py-3 rounded-2xl shadow-md transition flex items-center gap-2">
+                            <i class="fas fa-file-pdf"></i> Simpan PDF / Cetak LKPD
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             5. MENU EVALUASI (QUIZ TIME)
+             ========================================== -->
+        <section id="section-evaluasi" class="page-section hidden fade-in">
+            <div class="bg-white rounded-3xl shadow-lg border border-rose-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-rose-600 to-pink-600 text-white p-6">
+                    <span class="text-xs font-bold uppercase tracking-wider bg-black/20 px-3 py-1 rounded-full">Evaluasi Mandiri</span>
+                    <h2 class="font-heading text-2xl font-bold mt-1">Kuis Akhir: Simple Present Tense 🏆</h2>
+                </div>
+
+                <div class="p-6 sm:p-8">
+                    <!-- Form Identitas Sebelum Mulai Kuis -->
+                    <div id="quiz-intro" class="max-w-md mx-auto py-4">
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <h3 class="font-heading text-xl font-bold text-slate-800">Isi Data Diri Sebelum Mulai</h3>
+                            <p class="text-xs text-slate-500 mt-1">Terdiri dari 10 soal pilihan ganda. Kerjakan dengan teliti ya!</p>
+                        </div>
+
+                        <div class="space-y-4 mb-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap Siswa *</label>
+                                <input type="text" id="quiz-student-name" placeholder="Masukkan nama lengkap..." class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Kelas *</label>
+                                <input type="text" id="quiz-student-class" placeholder="Contoh: VII A" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500">
+                            </div>
+                        </div>
+
+                        <button onclick="startQuiz()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-3.5 rounded-2xl shadow-lg transition">
+                            Mulai Mengerjakan Soal <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- Daftar 10 Soal Pilihan Ganda -->
+                    <div id="quiz-questions-container" class="hidden">
+                        <div class="flex items-center justify-between bg-rose-50 border border-rose-100 px-4 py-3 rounded-2xl mb-6 text-sm">
+                            <div>
+                                <span class="text-slate-500">Peserta:</span> <strong id="display-quiz-name" class="text-slate-800">-</strong> (<span id="display-quiz-class">-</span>)
+                            </div>
+                            <span id="quiz-answered-count" class="font-extrabold text-rose-600">0 / 10 Terjawab</span>
+                        </div>
+
+                        <div id="quiz-list" class="space-y-6">
+                            <!-- Soal akan di-render oleh JavaScript -->
+                        </div>
+
+                        <div class="mt-8 pt-6 border-t border-slate-200 text-center">
+                            <button onclick="submitQuiz()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-8 py-4 rounded-2xl shadow-lg text-base transition transform hover:scale-105 inline-flex items-center gap-2">
+                                <i class="fas fa-paper-plane"></i> Selesai & Lihat Nilai
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hasil Evaluasi & Pembahasan -->
+                    <div id="quiz-result-container" class="hidden">
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white rounded-3xl p-6 sm:p-8 text-center mb-8 shadow-xl">
+                            <span class="text-xs uppercase tracking-widest text-amber-300 font-bold">Hasil Evaluasi Belajar</span>
+                            <h3 id="res-student-info" class="text-lg font-bold mt-1 text-slate-200">Nama Siswa - Kelas</h3>
+                            
+                            <div class="my-5 inline-flex items-center justify-center w-28 h-28 rounded-full bg-white/10 border-4 border-amber-400">
+                                <span id="res-final-score" class="font-heading text-4xl font-extrabold text-amber-300">100</span>
+                            </div>
+
+                            <h4 id="res-predicate" class="font-heading text-2xl font-extrabold text-emerald-400 mb-1">Excellent! 🌟</h4>
+                            <p id="res-message" class="text-sm text-slate-300 max-w-md mx-auto">Kamu sangat menguasai materi Simple Present Tense!</p>
+
+                            <div class="mt-6">
+                                <button onclick="resetQuiz()" class="bg-white text-slate-900 hover:bg-slate-100 font-extrabold px-6 py-2.5 rounded-xl text-sm transition">
+                                    <i class="fas fa-redo mr-1"></i> Ulangi Evaluasi
+                                </button>
+                            </div>
+                        </div>
+
+                        <h4 class="font-heading font-bold text-lg text-slate-800 mb-4">Kunci Jawaban & Pembahasan:</h4>
+                        <div id="quiz-review-list" class="space-y-4">
+                            <!-- Review pembahasan di-render JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             6. MENU PENGEMBANG (ABOUT CREATOR)
+             ========================================== -->
+        <section id="section-pengembang" class="page-section hidden fade-in">
+            <div class="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl border border-indigo-100 overflow-hidden">
+                <div class="h-32 bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 relative">
+                    <div class="absolute -bottom-14 left-1/2 transform -translate-x-1/2">
+                        <div class="w-28 h-28 rounded-full bg-white p-1.5 shadow-lg">
+                            <div class="w-full h-full rounded-full bg-gradient-to-br from-amber-100 to-sky-100 flex items-center justify-center text-indigo-600 text-5xl">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-16 pb-8 px-6 sm:px-10 text-center">
+                    <span class="inline-block bg-indigo-50 text-indigo-700 font-extrabold text-xs px-3 py-1 rounded-full mb-2">
+                        Pengembang Media Pembelajaran
+                    </span>
+                    <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-slate-800">
+                        Yulia Ekawati, S.Pd.
+                    </h2>
+                    <p class="text-sky-600 font-bold text-sm sm:text-base mt-1">
+                        Guru Mata Pelajaran Bahasa Inggris
+                    </p>
+                    <div class="inline-flex items-center gap-2 text-slate-500 text-sm font-semibold mt-2 bg-slate-100 px-4 py-1.5 rounded-full">
+                        <i class="fas fa-school text-indigo-500"></i>
+                        <span>SMPN 2 Palas</span>
+                    </div>
+
+                    <div class="mt-8 bg-gradient-to-r from-sky-50 to-indigo-50 border border-indigo-100 rounded-2xl p-6 relative">
+                        <i class="fas fa-quote-left text-indigo-200 text-3xl absolute top-3 left-4"></i>
+                        <p class="text-slate-700 italic font-medium text-sm sm:text-base relative z-10 leading-relaxed">
+                            "Belajar Bahasa Inggris adalah jendela untuk mengenal dunia. Jangan pernah takut membuat kesalahan saat berlatih, karena setiap kata yang kamu pelajari hari ini adalah langkah menuju masa depan yang gemilang. Keep practicing and never give up!"
+                        </p>
+                    </div>
+
+                    <div class="mt-6">
+                        <button onclick="navigateTo('home')" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition">
+                            Kembali ke Beranda
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-500 no-print mt-auto">
+        <p class="font-semibold">Media Pembelajaran Interaktif Bahasa Inggris • Materi: <strong>Simple Present Tense</strong></p>
+        <p class="mt-0.5">Dikembangkan oleh <strong>Yulia Ekawati, S.Pd.</strong> — SMPN 2 Palas</p>
+    </footer>
+
+    <!-- ==========================================
+         JAVASCRIPT LOGIC
+         ========================================== -->
+    <script>
+        // --- 1. SISTEM NAVIGASI SPA & NOTIFIKASI ---
+        function navigateTo(sectionId) {
+            // Sembunyikan semua section
+            document.querySelectorAll('.page-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            // Tampilkan section tujuan
+            const target = document.getElementById('section-' + sectionId);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+
+            // Update styling tombol navigasi atas
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-nav') === sectionId) {
+                    btn.classList.remove('text-slate-600', 'hover:bg-sky-50');
+                    btn.classList.add('bg-sky-600', 'text-white');
+                } else {
+                    btn.classList.add('text-slate-600', 'hover:bg-sky-50');
+                    btn.classList.remove('bg-sky-600', 'text-white');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Custom Toast Notification (Menggantikan alert)
+        let toastTimeout;
+        function showToast(message, type = 'info') {
+            const toastBox = document.getElementById('toast-box');
+            const toastContent = document.getElementById('toast-content');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastMsg = document.getElementById('toast-message');
+
+            toastMsg.textContent = message;
+            toastContent.className = 'flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl font-semibold text-white ';
+            
+            if (type === 'success') {
+                toastContent.classList.add('bg-emerald-600');
+                toastIcon.className = 'fas fa-check-circle text-xl';
+            } else if (type === 'error') {
+                toastContent.classList.add('bg-rose-600');
+                toastIcon.className = 'fas fa-exclamation-circle text-xl';
+            } else {
+                toastContent.classList.add('bg-sky-700');
+                toastIcon.className = 'fas fa-info-circle text-xl';
+            }
+
+            toastBox.classList.remove('hidden');
+            setTimeout(() => {
+                toastBox.classList.remove('translate-y-10', 'opacity-0');
+            }, 10);
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toastBox.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toastBox.classList.add('hidden'), 300);
+            }, 3000);
+        }
+
+        // --- 2. LOGIKA MENU MATERI (SLIDES) ---
+        let currentMateriSlide = 0;
+        const totalMateriSlides = 4;
+
+        function setMateriSlide(index) {
+            currentMateriSlide = index;
+            for (let i = 0; i < totalMateriSlides; i++) {
+                const slide = document.getElementById('materi-slide-' + i);
+                if (i === index) {
+                    slide.classList.remove('hidden');
+                } else {
+                    slide.classList.add('hidden');
+                }
+            }
+
+            // Update tab buttons
+            document.querySelectorAll('.materi-tab').forEach((tab, idx) => {
+                if (idx === index) {
+                    tab.className = 'materi-tab px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-900 transition shadow-sm';
+                } else {
+                    tab.className = 'materi-tab px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-700 text-white hover:bg-sky-500 transition';
+                }
+            });
+
+            document.getElementById('materi-counter').textContent = `Halaman ${index + 1} dari ${totalMateriSlides}`;
+            document.getElementById('btn-prev-materi').disabled = (index === 0);
+            
+            const nextBtn = document.getElementById('btn-next-materi');
+            if (index === totalMateriSlides - 1) {
+                nextBtn.innerHTML = 'Ke Simulasi <i class="fas fa-flask ml-1"></i>';
+                nextBtn.onclick = () => navigateTo('simulasi');
+            } else {
+                nextBtn.innerHTML = 'Selanjutnya <i class="fas fa-arrow-right ml-1"></i>';
+                nextBtn.onclick = () => changeMateriSlide(1);
+            }
+        }
+
+        function changeMateriSlide(step) {
+            const nextIndex = currentMateriSlide + step;
+            if (nextIndex >= 0 && nextIndex < totalMateriSlides) {
+                setMateriSlide(nextIndex);
+            }
+        }
+
+        // --- 3. LOGIKA MENU SIMULASI (SENTENCE BUILDER LAB) ---
+        let simType = 'positive';
+
+        const verbData = {
+            eat:   { sForm: 'eats',    obj: 'fried rice every morning', idVerb: 'makan nasi goreng setiap pagi', rule: 'ditambah akhiran -s' },
+            drink: { sForm: 'drinks',  obj: 'a glass of milk',          idVerb: 'minum segelas susu',            rule: 'ditambah akhiran -s' },
+            go:    { sForm: 'goes',    obj: 'to school every day',      idVerb: 'pergi ke sekolah setiap hari',  rule: 'berakhiran -o sehingga ditambah -es' },
+            study: { sForm: 'studies', obj: 'English diligently',       idVerb: 'belajar Bahasa Inggris dengan rajin', rule: 'berakhiran konsonan + y sehingga y berubah menjadi -ies' },
+            play:  { sForm: 'plays',   obj: 'football in the yard',     idVerb: 'bermain sepak bola di lapangan', rule: 'ditambah akhiran -s' },
+            watch: { sForm: 'watches', obj: 'TV in the evening',        idVerb: 'menonton TV di malam hari',     rule: 'berakhiran -ch sehingga ditambah -es' },
+            read:  { sForm: 'reads',   obj: 'a storybook',              idVerb: 'membaca buku cerita',           rule: 'ditambah akhiran -s' }
+        };
+
+        const subjectMeaning = {
+            I: 'Saya', You: 'Kamu', We: 'Kami', They: 'Mereka',
+            He: 'Dia (laki-laki)', She: 'Dia (perempuan)', It: 'Dia (hewan/benda)'
+        };
+
+        function setSimType(type) {
+            simType = type;
+            document.querySelectorAll('.sim-type-btn').forEach(btn => {
+                btn.className = 'sim-type-btn py-2.5 px-2 rounded-xl font-bold text-sm bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
+            });
+            const activeBtn = document.getElementById('sim-type-' + type);
+            if (type === 'positive') activeBtn.className = 'sim-type-btn py-2.5 px-2 rounded-xl font-bold text-sm bg-emerald-600 text-white shadow-sm transition';
+            if (type === 'negative') activeBtn.className = 'sim-type-btn py-2.5 px-2 rounded-xl font-bold text-sm bg-rose-600 text-white shadow-sm transition';
+            if (type === 'question') activeBtn.className = 'sim-type-btn py-2.5 px-2 rounded-xl font-bold text-sm bg-amber-500 text-white shadow-sm transition';
+            
+            updateSimulation();
+        }
+
+        function updateSimulation() {
+            const subj = document.getElementById('sim-subject').value;
+            const verb = document.getElementById('sim-verb').value;
+            const isSingularThird = ['He', 'She', 'It'].includes(subj);
+            const vInfo = verbData[verb];
+
+            const sentenceEl = document.getElementById('sim-result-sentence');
+            const meaningEl = document.getElementById('sim-result-meaning');
+            const expEl = document.getElementById('sim-explanation');
+
+            if (simType === 'positive') {
+                if (isSingularThird) {
+                    sentenceEl.innerHTML = `${subj} <span class="text-rose-400 underline decoration-wavy">${vInfo.sForm}</span> ${vInfo.obj}.`;
+                    expEl.innerHTML = `Karena ini kalimat <strong>Positif (+)</strong> dan subjeknya adalah <strong>${subj}</strong> (orang ketiga tunggal), kata kerja dasar <em>"${verb}"</em> ${vInfo.rule} menjadi <strong>"${vInfo.sForm}"</strong>.`;
+                } else {
+                    sentenceEl.innerHTML = `${subj} <span class="text-emerald-400">${verb}</span> ${vInfo.obj}.`;
+                    expEl.innerHTML = `Karena subjeknya adalah <strong>${subj}</strong>, pada kalimat <strong>Positif (+)</strong> kata kerja tetap menggunakan bentuk dasar (Verb 1) yaitu <strong>"${verb}"</strong> tanpa tambahan -s/-es.`;
+                }
+                meaningEl.textContent = `Artinya: "${subjectMeaning[subj]} ${vInfo.idVerb}."`;
+            } 
+            else if (simType === 'negative') {
+                const aux = isSingularThird ? "doesn't" : "don't";
+                sentenceEl.innerHTML = `${subj} <span class="text-rose-400">${aux}</span> ${verb} ${vInfo.obj}.`;
+                meaningEl.textContent = `Artinya: "${subjectMeaning[subj]} tidak ${vInfo.idVerb}."`;
+                expEl.innerHTML = `Pada kalimat <strong>Negatif (-)</strong> dengan subjek <strong>${subj}</strong>, kita menggunakan kata bantu <strong>${aux}</strong> (${isSingularThird ? 'does not' : 'do not'}). Kata kerja kembali ke bentuk dasar <strong>"${verb}"</strong> (tanpa -s/-es).`;
+            } 
+            else if (simType === 'question') {
+                const aux = isSingularThird ? "Does" : "Do";
+                const subjDisplay = subj === 'I' ? 'I' : subj.toLowerCase();
+                sentenceEl.innerHTML = `<span class="text-amber-400">${aux}</span> ${subjDisplay} ${verb} ${vInfo.obj}?`;
+                meaningEl.textContent = `Artinya: "Apakah ${subjectMeaning[subj].toLowerCase()} ${vInfo.idVerb}?"`;
+                expEl.innerHTML = `Pada kalimat <strong>Tanya (?)</strong>, kata bantu <strong>${aux}</strong> diletakkan di awal kalimat sebelum subjek <strong>${subj}</strong>, dan kata kerja tetap menggunakan bentuk dasar <strong>"${verb}"</strong>.`;
+            }
+        }
+
+        // --- 4. LOGIKA MENU GAME (PRESENT TENSE CHALLENGE) ---
+        const gameQuestionsBank = [
+            { q: "My mother ______ fried rice every morning.", opts: ["cook", "cooks"], ans: 1, exp: "Subjek 'My mother' (She) adalah tunggal, maka verb ditambah -s (cooks)." },
+            { q: "They ______ football in the school yard every Sunday.", opts: ["play", "plays"], ans: 0, exp: "Subjek 'They' menggunakan kata kerja dasar tanpa -s (play)." },
+            { q: "______ Budi go to SMPN 2 Palas by bicycle?", opts: ["Do", "Does"], ans: 1, exp: "Budi (He) adalah orang ketiga tunggal, sehingga kalimat tanya memakai 'Does'." },
+            { q: "The sun ______ in the east and sets in the west.", opts: ["rise", "rises"], ans: 1, exp: "Fakta umum dengan subjek tunggal 'The sun' (It) memakai 'rises'." },
+            { q: "We ______ like eating spicy food.", opts: ["don't", "doesn't"], ans: 0, exp: "Subjek 'We' menggunakan kata bantu negatif 'don't' (do not)." },
+            { q: "Siti always ______ English before sleeping.", opts: ["studys", "studies"], ans: 1, exp: "Kata 'study' berakhiran konsonan + y, jika bertemu subjek 'Siti' menjadi 'studies'." },
+            { q: "She doesn't ______ TV in the afternoon.", opts: ["watch", "watches"], ans: 0, exp: "Setelah kata 'doesn't', kata kerja kembali ke bentuk dasar 'watch' tanpa -es." },
+            { q: "I usually ______ up at 05.00 AM.", opts: ["wake", "wakes"], ans: 0, exp: "Subjek 'I' selalu menggunakan kata kerja bentuk pertama tanpa -s (wake)." }
+        ];
+
+        let gameState = {
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            lives: 3,
+            answered: false
+        };
+
+        function startGame() {
+            // Acak urutan soal
+            const shuffled = [...gameQuestionsBank].sort(() => Math.random() - 0.5);
+            gameState = {
+                questions: shuffled,
+                currentIndex: 0,
+                score: 0,
+                lives: 3,
+                answered: false
+            };
+
+            document.getElementById('game-start-screen').classList.add('hidden');
+            document.getElementById('game-end-screen').classList.add('hidden');
+            document.getElementById('game-play-screen').classList.remove('hidden');
+            document.getElementById('game-hud').classList.remove('hidden');
+
+            updateGameHUD();
+            renderGameQuestion();
+        }
+
+        function updateGameHUD() {
+            document.getElementById('game-score').textContent = gameState.score;
+            let hearts = '';
+            for (let i = 0; i < 3; i++) {
+                hearts += i < gameState.lives ? '❤️' : '🖤';
+            }
+            document.getElementById('game-lives').textContent = hearts;
+        }
+
+        function renderGameQuestion() {
+            gameState.answered = false;
+            const qObj = gameState.questions[gameState.currentIndex];
+            const total = gameState.questions.length;
+
+            document.getElementById('game-q-number').textContent = `Pertanyaan ${gameState.currentIndex + 1} dari ${total}`;
+            document.getElementById('game-progress').style.width = `${((gameState.currentIndex + 1) / total) * 100}%`;
+            document.getElementById('game-question-text').textContent = qObj.q;
+
+            const btn0 = document.getElementById('game-opt-0');
+            const btn1 = document.getElementById('game-opt-1');
+
+            btn0.textContent = qObj.opts[0];
+            btn1.textContent = qObj.opts[1];
+
+            // Reset style tombol
+            [btn0, btn1].forEach(btn => {
+                btn.disabled = false;
+                btn.className = 'py-4 px-6 rounded-2xl font-heading font-extrabold text-lg bg-white border-2 border-sky-200 text-sky-800 hover:bg-sky-50 hover:border-sky-400 shadow-sm transition';
+            });
+
+            document.getElementById('game-feedback').classList.add('hidden');
+        }
+
+        function checkGameAnswer(selectedIndex) {
+            if (gameState.answered) return;
+            gameState.answered = true;
+
+            const qObj = gameState.questions[gameState.currentIndex];
+            const isCorrect = selectedIndex === qObj.ans;
+
+            const btn0 = document.getElementById('game-opt-0');
+            const btn1 = document.getElementById('game-opt-1');
+            const selectedBtn = selectedIndex === 0 ? btn0 : btn1;
+            const correctBtn = qObj.ans === 0 ? btn0 : btn1;
+
+            btn0.disabled = true;
+            btn1.disabled = true;
+
+            const fbBox = document.getElementById('game-feedback');
+            const fbIcon = document.getElementById('game-fb-icon');
+            const fbTitle = document.getElementById('game-fb-title');
+            const fbDesc = document.getElementById('game-fb-desc');
+
+            fbBox.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-900', 'bg-rose-100', 'text-rose-900');
+
+            if (isCorrect) {
+                gameState.score += 10;
+                selectedBtn.className = 'py-4 px-6 rounded-2xl font-heading font-extrabold text-lg bg-emerald-500 border-2 border-emerald-600 text-white shadow-md';
+                fbBox.classList.add('bg-emerald-100', 'text-emerald-900');
+                fbIcon.textContent = '🎉';
+                fbTitle.textContent = 'Hebat! Jawaban Benar (+10 Poin)';
+            } else {
+                gameState.lives -= 1;
+                selectedBtn.className = 'py-4 px-6 rounded-2xl font-heading font-extrabold text-lg bg-rose-500 border-2 border-rose-600 text-white shadow-md';
+                correctBtn.className = 'py-4 px-6 rounded-2xl font-heading font-extrabold text-lg bg-emerald-100 border-2 border-emerald-500 text-emerald-800';
+                fbBox.classList.add('bg-rose-100', 'text-rose-900');
+                fbIcon.textContent = '❌';
+                fbTitle.textContent = 'Kurang Tepat! Nyawa berkurang 1';
+            }
+
+            fbDesc.textContent = qObj.exp;
+            updateGameHUD();
+        }
+
+        function nextGameQuestion() {
+            if (gameState.lives <= 0) {
+                endGame(false);
+                return;
+            }
+            if (gameState.currentIndex + 1 >= gameState.questions.length) {
+                endGame(true);
+                return;
+            }
+            gameState.currentIndex++;
+            renderGameQuestion();
+        }
+
+        function endGame(isWin) {
+            document.getElementById('game-play-screen').classList.add('hidden');
+            document.getElementById('game-end-screen').classList.remove('hidden');
+
+            document.getElementById('game-final-score').textContent = gameState.score;
+            if (isWin) {
+                document.getElementById('game-end-emoji').textContent = '🏆';
+                document.getElementById('game-end-title').textContent = 'Congratulations! You Win!';
+                document.getElementById('game-end-subtitle').textContent = 'Kamu berhasil menyelesaikan semua tantangan Simple Present Tense!';
+            } else {
+                document.getElementById('game-end-emoji').textContent = '💪';
+                document.getElementById('game-end-title').textContent = 'Game Over!';
+                document.getElementById('game-end-subtitle').textContent = 'Nyawamu habis. Yuk pelajari materinya lagi dan coba tantangan ini kembali!';
+            }
+        }
+
+        // --- 5. LOGIKA MENU LKPD ---
+        function checkLKPD() {
+            // Kunci Aktivitas 1: b, c, d, a
+            const ans1 = {
+                m1: document.getElementById('lkpd-m1').value,
+                m2: document.getElementById('lkpd-m2').value,
+                m3: document.getElementById('lkpd-m3').value,
+                m4: document.getElementById('lkpd-m4').value
+            };
+
+            let correct1 = 0;
+            if (ans1.m1 === 'b') correct1++;
+            if (ans1.m2 === 'c') correct1++;
+            if (ans1.m3 === 'd') correct1++;
+            if (ans1.m4 === 'a') correct1++;
+
+            // Kunci Aktivitas 2: false, true, false
+            const tf1 = document.querySelector('input[name="lkpd-tf1"]:checked')?.value;
+            const tf2 = document.querySelector('input[name="lkpd-tf2"]:checked')?.value;
+            const tf3 = document.querySelector('input[name="lkpd-tf3"]:checked')?.value;
+
+            let correct2 = 0;
+            if (tf1 === 'false') correct2++;
+            if (tf2 === 'true') correct2++;
+            if (tf3 === 'false') correct2++;
+
+            document.getElementById('lkpd-score-1').textContent = `Benar: ${correct1} / 4`;
+            document.getElementById('lkpd-score-2').textContent = `Benar: ${correct2} / 3`;
+
+            const banner = document.getElementById('lkpd-result-banner');
+            banner.classList.remove('hidden');
+            banner.innerHTML = `<i class="fas fa-check-circle mr-1"></i> Hasil Pemeriksaan Otomatis: <strong>Aktivitas 1 benar ${correct1} dari 4</strong>, dan <strong>Aktivitas 2 benar ${correct2} dari 3</strong>. Pastikan Aktivitas 3 juga sudah diisi sebelum menyimpan PDF!`;
+            
+            showToast('LKPD berhasil diperiksa!', 'success');
+        }
+
+        function printLKPD() {
+            const name = document.getElementById('lkpd-name').value.trim();
+            if (!name) {
+                showToast('Silakan isi Nama Lengkap terlebih dahulu sebelum mencetak!', 'error');
+                document.getElementById('lkpd-name').focus();
+                return;
+            }
+            window.print();
+        }
+
+        // --- 6. LOGIKA MENU EVALUASI (10 SOAL PILIHAN GANDA) ---
+        const quizQuestions = [
+            {
+                q: "1. Rani ______ to school at 06.30 every morning.",
+                options: ["go", "goes", "going", "went"],
+                ans: 1,
+                exp: "Subjek 'Rani' (She) adalah orang ketiga tunggal, sehingga kata kerja 'go' ditambah -es menjadi 'goes'."
+            },
+            {
+                q: "2. They ______ football in the field every afternoon.",
+                options: ["plays", "playing", "play", "played"],
+                ans: 2,
+                exp: "Subjek 'They' menggunakan kata kerja bentuk pertama (Verb 1) tanpa tambahan -s/-es, yaitu 'play'."
+            },
+            {
+                q: "3. My father ______ drink coffee in the morning. He prefers tea.",
+                options: ["don't", "doesn't", "isn't", "aren't"],
+                ans: 1,
+                exp: "Untuk kalimat negatif dengan subjek tunggal 'My father' (He), kita menggunakan kata bantu 'doesn't'."
+            },
+            {
+                q: "4. ______ you always help your mother at home?",
+                options: ["Does", "Is", "Are", "Do"],
+                ans: 3,
+                exp: "Kalimat tanya dengan subjek 'You' diawali dengan kata bantu 'Do'."
+            },
+            {
+                q: "5. The earth ______ around the sun.",
+                options: ["revolve", "revolves", "revolving", "revolved"],
+                ans: 1,
+                exp: "Ini adalah fakta ilmiah (General Truth). Subjek 'The earth' (It) tunggal, maka kata kerja menjadi 'revolves'."
+            },
+            {
+                q: "6. Does your sister ______ English every night?",
+                options: ["studies", "studying", "study", "studied"],
+                ans: 2,
+                exp: "Dalam kalimat tanya yang sudah memakai 'Does', kata kerja kembali ke bentuk dasar tanpa akhiran, yaitu 'study'."
+            },
+            {
+                q: "7. Andi and I ______ best friends at SMPN 2 Palas.",
+                options: ["am", "is", "are", "does"],
+                ans: 2,
+                exp: "Subjek 'Andi and I' bermakna jamak (We), sehingga to be yang tepat untuk kalimat nominal adalah 'are'."
+            },
+            {
+                q: "8. My cat always ______ fish for lunch.",
+                options: ["eat", "eats", "eating", "ate"],
+                ans: 1,
+                exp: "Subjek 'My cat' (It) adalah tunggal, maka kata kerja 'eat' mendapat tambahan -s menjadi 'eats'."
+            },
+            {
+                q: "9. We ______ go to school on Sunday because it is a holiday.",
+                options: ["doesn't", "don't", "aren't", "isn't"],
+                ans: 1,
+                exp: "Subjek 'We' menggunakan 'don't' untuk menyatakan kalimat negatif verbal."
+            },
+            {
+                q: "10. Arrange these words into a good sentence: (always - morning - in - exercises - He - the)",
+                options: [
+                    "He always exercises in the morning.",
+                    "He exercises always in the morning.",
+                    "Always he exercises in the morning.",
+                    "He in the morning always exercises."
+                ],
+                ans: 0,
+                exp: "Susunan yang benar: Subjek (He) + Adverb of frequency (always) + Verb-s (exercises) + Keterangan waktu (in the morning)."
+            }
+        ];
+
+        let quizUserAnswers = {};
+
+        function startQuiz() {
+            const name = document.getElementById('quiz-student-name').value.trim();
+            const cls = document.getElementById('quiz-student-class').value.trim();
+
+            if (!name || !cls) {
+                showToast('Harap isi Nama Lengkap dan Kelas terlebih dahulu!', 'error');
+                return;
+            }
+
+            quizUserAnswers = {};
+            document.getElementById('display-quiz-name').textContent = name;
+            document.getElementById('display-quiz-class').textContent = cls;
+            document.getElementById('quiz-answered-count').textContent = `0 / ${quizQuestions.length} Terjawab`;
+
+            const listContainer = document.getElementById('quiz-list');
+            listContainer.innerHTML = '';
+
+            quizQuestions.forEach((item, qIdx) => {
+                const letters = ['A', 'B', 'C', 'D'];
+                let optionsHTML = '';
+                item.options.forEach((opt, oIdx) => {
+                    optionsHTML += `
+                        <label onclick="selectQuizOption(${qIdx}, ${oIdx})" id="q-opt-${qIdx}-${oIdx}" class="quiz-opt-label-${qIdx} flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-rose-50/50 cursor-pointer transition">
+                            <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-extrabold text-xs flex items-center justify-center flex-shrink-0">${letters[oIdx]}</span>
+                            <span class="text-sm font-semibold text-slate-700">${opt}</span>
+                        </label>
+                    `;
+                });
+
+                listContainer.innerHTML += `
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+                        <p class="font-bold text-slate-800 text-base mb-4">${item.q}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            ${optionsHTML}
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-result-container').classList.add('hidden');
+            document.getElementById('quiz-questions-container').classList.remove('hidden');
+        }
+
+        function selectQuizOption(qIdx, oIdx) {
+            quizUserAnswers[qIdx] = oIdx;
+
+            // Update visual pilihan
+            document.querySelectorAll(`.quiz-opt-label-${qIdx}`).forEach((lbl, idx) => {
+                if (idx === oIdx) {
+                    lbl.className = `quiz-opt-label-${qIdx} flex items-center gap-3 p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50 cursor-pointer transition`;
+                    lbl.querySelector('span:first-child').className = 'w-7 h-7 rounded-lg bg-rose-600 text-white font-extrabold text-xs flex items-center justify-center flex-shrink-0';
+                } else {
+                    lbl.className = `quiz-opt-label-${qIdx} flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-rose-50/50 cursor-pointer transition`;
+                    lbl.querySelector('span:first-child').className = 'w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-extrabold text-xs flex items-center justify-center flex-shrink-0';
+                }
+            });
+
+            const answeredTotal = Object.keys(quizUserAnswers).length;
+            document.getElementById('quiz-answered-count').textContent = `${answeredTotal} / ${quizQuestions.length} Terjawab`;
+        }
+
+        function submitQuiz() {
+            const answeredTotal = Object.keys(quizUserAnswers).length;
+            if (answeredTotal < quizQuestions.length) {
+                showToast(`Masih ada ${quizQuestions.length - answeredTotal} soal yang belum dijawab!`, 'error');
+                return;
+            }
+
+            let correctCount = 0;
+            const reviewContainer = document.getElementById('quiz-review-list');
+            reviewContainer.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+
+            quizQuestions.forEach((item, idx) => {
+                const userAns = quizUserAnswers[idx];
+                const isCorrect = userAns === item.ans;
+                if (isCorrect) correctCount++;
+
+                reviewContainer.innerHTML += `
+                    <div class="p-4 rounded-2xl border ${isCorrect ? 'bg-emerald-50/70 border-emerald-200' : 'bg-rose-50/70 border-rose-200'}">
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <p class="font-bold text-sm text-slate-800">${item.q}</p>
+                            <span class="px-2.5 py-0.5 rounded-lg text-xs font-extrabold whitespace-nowrap ${isCorrect ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}">
+                                ${isCorrect ? 'Benar' : 'Salah'}
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-1">
+                            Jawabanmu: <strong>${letters[userAns]}. ${item.options[userAns]}</strong> 
+                            ${!isCorrect ? `| Kunci Jawaban: <strong class="text-emerald-700">${letters[item.ans]}. ${item.options[item.ans]}</strong>` : ''}
+                        </p>
+                        <p class="text-xs text-slate-500 italic bg-white/80 p-2 rounded-lg mt-2">
+                            💡 <strong>Pembahasan:</strong> ${item.exp}
+                        </p>
+                    </div>
+                `;
+            });
+
+            const finalScore = correctCount * 10;
+            const name = document.getElementById('quiz-student-name').value;
+            const cls = document.getElementById('quiz-student-class').value;
+
+            document.getElementById('res-student-info').textContent = `${name} • Kelas ${cls}`;
+            document.getElementById('res-final-score').textContent = finalScore;
+
+            const predEl = document.getElementById('res-predicate');
+            const msgEl = document.getElementById('res-message');
+
+            if (finalScore >= 80) {
+                predEl.textContent = 'Excellent! 🌟';
+                predEl.className = 'font-heading text-2xl font-extrabold text-emerald-400 mb-1';
+                msgEl.textContent = 'Luar biasa! Pemahamanmu tentang Simple Present Tense sudah sangat baik.';
+            } else if (finalScore >= 60) {
+                predEl.textContent = 'Good Job! 👍';
+                predEl.className = 'font-heading text-2xl font-extrabold text-amber-300 mb-1';
+                msgEl.textContent = 'Bagus! Pelajari kembali pembahasan soal yang salah agar nilaimu semakin sempurna.';
+            } else {
+                predEl.textContent = 'Keep Practicing! 💪';
+                predEl.className = 'font-heading text-2xl font-extrabold text-rose-400 mb-1';
+                msgEl.textContent = 'Jangan menyerah! Silakan buka kembali menu Materi dan Simulasi, lalu coba lagi ya.';
+            }
+
+            document.getElementById('quiz-questions-container').classList.add('hidden');
+            document.getElementById('quiz-result-container').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-result-container').classList.add('hidden');
+            document.getElementById('quiz-intro').classList.remove('hidden');
+        }
+
+        // Inisialisasi awal
+        window.onload = function() {
+            updateSimulation();
+        };
+    </script>
+</body>
+</html>
